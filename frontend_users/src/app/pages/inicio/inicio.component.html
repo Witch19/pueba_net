@@ -1,0 +1,235 @@
+@if (!authenticated()) {
+  <app-login-panel (loggedIn)="onLoggedIn()" />
+} @else {
+  <div class="inicio-page">
+    <p-toolbar styleClass="inicio-toolbar">
+      <ng-template pTemplate="start">
+        <div class="toolbar-brand">
+          <i class="pi pi-th-large" aria-hidden="true"></i>
+          <span class="toolbar-title">Panel</span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="end">
+        <p-button
+          label="Cerrar sesión"
+          icon="pi pi-sign-out"
+          severity="danger"
+          outlined
+          (onClick)="logout()"
+        ></p-button>
+      </ng-template>
+    </p-toolbar>
+
+    <main class="inicio-main">
+      <p-card styleClass="session-card">
+        <ng-template pTemplate="title">
+          <div class="card-title-block">
+            <span class="card-heading">Sesión activa</span>
+            <span class="card-email">{{ email() || 'Usuario' }}</span>
+          </div>
+        </ng-template>
+
+        <div class="session-meta">
+          <span class="meta-label">Rol</span>
+          <p-tag
+            [value]="role() || '—'"
+            [severity]="tagSeverity(role() || '')"
+            [rounded]="true"
+          ></p-tag>
+        </div>
+
+        @if (adminError) {
+          <p-message severity="warn" styleClass="block mt-3">{{ adminError }}</p-message>
+        }
+        @if (adminResult !== null && adminError === null) {
+          <pre class="admin-output">{{ adminResult }}</pre>
+        }
+
+        @if (role() === 'Admin') {
+          <p-divider styleClass="inicio-divider"></p-divider>
+
+          <div class="users-section-head">
+            <p class="section-label users-section-title">Usuarios registrados</p>
+            <div class="users-toolbar-actions">
+              <p-button
+                label="Nuevo usuario"
+                icon="pi pi-plus"
+                severity="success"
+                size="small"
+                (onClick)="openCreateUser()"
+              ></p-button>
+              <p-button
+                label="Actualizar"
+                icon="pi pi-refresh"
+                severity="secondary"
+                outlined
+                size="small"
+                [loading]="usersLoading"
+                [disabled]="usersLoading"
+                (onClick)="refreshUsersIfAdmin()"
+              ></p-button>
+            </div>
+          </div>
+
+          <p-message
+            *ngIf="showUsersError"
+            severity="error"
+            styleClass="block mt-2"
+            >{{ usersError }}</p-message>
+
+          <p-message
+            *ngIf="crudMessage"
+            [severity]="crudMessage.severity"
+            [closable]="true"
+            styleClass="block mt-2"
+            (onClose)="dismissCrudMessage()"
+            >{{ crudMessage.text }}</p-message>
+
+          <p-table
+            *ngIf="showUsersDataBlock"
+            [value]="users()"
+            [loading]="usersLoading"
+            [rowHover]="true"
+            styleClass="users-table p-datatable-sm"
+            [responsiveLayout]="'scroll'"
+            [tableStyle]="usersTableStyle"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th style="width: 4rem">Id</th>
+                <th>Correo</th>
+                <th style="width: 8rem">Rol</th>
+                <th style="width: 8rem; text-align: right">Acciones</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-u>
+              <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                  <p-tag
+                    [value]="u.role"
+                    [severity]="tagSeverity(u.role)"
+                    [rounded]="true"
+                  ></p-tag>
+                </td>
+                <td class="actions-cell">
+                  <p-button
+                    icon="pi pi-pencil"
+                    [rounded]="true"
+                    text
+                    severity="secondary"
+                    size="small"
+                    [attr.aria-label]="'Editar ' + u.email"
+                    (onClick)="openEditUser(u)"
+                  ></p-button>
+                  <p-button
+                    icon="pi pi-trash"
+                    [rounded]="true"
+                    text
+                    severity="danger"
+                    size="small"
+                    [attr.aria-label]="'Eliminar ' + u.email"
+                    (onClick)="confirmDeleteUser(u)"
+                  ></p-button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="4" class="empty-users">No hay usuarios. Pulsa «Nuevo usuario» para crear uno.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+          <div
+            *ngIf="showUsersSpinner"
+            class="users-loading"
+            role="status"
+            aria-label="Cargando usuarios"
+          >
+            <p-progressSpinner strokeWidth="4"></p-progressSpinner>
+          </div>
+
+          <p-confirmDialog></p-confirmDialog>
+
+          <p-dialog
+            [(visible)]="userDialogVisible"
+            [modal]="true"
+            [closable]="true"
+            [draggable]="false"
+            [resizable]="false"
+            [style]="{ width: '100%', maxWidth: '26rem' }"
+            [header]="userDialogMode === 'create' ? 'Nuevo usuario' : 'Editar usuario'"
+            (onHide)="closeUserDialog()"
+          >
+            <p-fluid class="user-dialog-fields">
+              <div class="field">
+                <label for="uf-email" class="field-label">Correo</label>
+                <input
+                  id="uf-email"
+                  type="email"
+                  name="ufEmail"
+                  pInputText
+                  fluid
+                  [(ngModel)]="userForm.email"
+                  autocomplete="off"
+                  [disabled]="userDialogSaving"
+                />
+              </div>
+              <div class="field">
+                <label for="uf-role" class="field-label">Rol</label>
+                <p-select
+                  inputId="uf-role"
+                  name="ufRole"
+                  [options]="roleOptions"
+                  [(ngModel)]="userForm.role"
+                  optionLabel="label"
+                  optionValue="value"
+                  placeholder="Rol"
+                  [disabled]="userDialogSaving"
+                  styleClass="w-full"
+                ></p-select>
+              </div>
+              <div class="field">
+                <label for="uf-pass" class="field-label">{{
+                  userDialogMode === 'create' ? 'Contraseña' : 'Nueva contraseña (opcional)'
+                }}</label>
+                <p-password
+                  inputId="uf-pass"
+                  name="ufPass"
+                  [(ngModel)]="userForm.password"
+                  [feedback]="userDialogMode === 'create'"
+                  [toggleMask]="true"
+                  [disabled]="userDialogSaving"
+                  styleClass="w-full dialog-password"
+                  [inputStyleClass]="'w-full'"
+                  [placeholder]="userDialogMode === 'create' ? 'Mínimo 4 caracteres' : 'Dejar vacío para no cambiar'"
+                ></p-password>
+              </div>
+            </p-fluid>
+            <p-message *ngIf="userSaveError" severity="error" styleClass="block mt-2">{{
+              userSaveError
+            }}</p-message>
+            <ng-template pTemplate="footer">
+              <p-button
+                label="Cancelar"
+                severity="secondary"
+                text
+                [disabled]="userDialogSaving"
+                (onClick)="closeUserDialog()"
+              ></p-button>
+              <p-button
+                [label]="userDialogMode === 'create' ? 'Crear' : 'Guardar'"
+                icon="pi pi-check"
+                [loading]="userDialogSaving"
+                [disabled]="userDialogSaving"
+                (onClick)="saveUser()"
+              ></p-button>
+            </ng-template>
+          </p-dialog>
+        }
+      </p-card>
+    </main>
+  </div>
+}

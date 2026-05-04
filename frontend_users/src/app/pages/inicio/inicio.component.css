@@ -1,0 +1,172 @@
+.inicio-page {
+  min-height: 100dvh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--p-surface-100);
+}
+
+.inicio-toolbar {
+  border-radius: 0;
+  border-width: 0 0 1px 0;
+  padding: 0.65rem 1rem;
+}
+
+.toolbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--p-text-color);
+}
+
+.toolbar-brand .pi {
+  color: var(--p-primary-color);
+}
+
+.toolbar-title {
+  font-size: 1.05rem;
+}
+
+.inicio-main {
+  flex: 1;
+  padding: clamp(1rem, 3vw, 2rem);
+  max-width: min(52rem, 100%);
+  margin: 0 auto;
+  width: 100%;
+}
+
+.card-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.card-heading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--p-text-color);
+}
+
+.card-email {
+  font-size: 0.9rem;
+  color: var(--p-text-muted-color);
+  word-break: break-all;
+}
+
+:host ::ng-deep .session-card .p-card-title {
+  margin-bottom: 0.5rem;
+}
+
+.users-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.users-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.users-section-title {
+  margin: 0;
+}
+
+:host ::ng-deep .users-table {
+  margin-top: 0.5rem;
+}
+
+.empty-users-soft {
+  margin: 0.75rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--p-border-radius-md);
+  background: var(--p-surface-100);
+  color: var(--p-text-muted-color);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.users-loading {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
+.actions-cell {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.user-dialog-fields .field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.user-dialog-fields .field-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--p-text-muted-color);
+}
+
+:host ::ng-deep .dialog-password,
+:host ::ng-deep .dialog-password .p-password,
+:host ::ng-deep .dialog-password .p-password-input {
+  width: 100%;
+}
+
+.session-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.meta-label {
+  font-size: 0.85rem;
+  color: var(--p-text-muted-color);
+  font-weight: 600;
+}
+
+:host ::ng-deep .inicio-divider {
+  margin: 1.25rem 0;
+}
+
+.section-label {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--p-text-muted-color);
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.admin-output {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--p-border-radius-md);
+  background: var(--p-surface-50);
+  border: 1px solid var(--p-content-border-color);
+  font-size: 0.85rem;
+  overflow: auto;
+}
+
+:host ::ng-deep .block {
+  display: block;
+}
+
+:host ::ng-deep .mt-3 {
+  margin-top: 0.75rem;
+}

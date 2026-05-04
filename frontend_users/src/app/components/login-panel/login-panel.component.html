@@ -1,0 +1,94 @@
+<div class="login-page">
+  <div class="login-backdrop" aria-hidden="true"></div>
+
+  <div class="login-content">
+    <header class="login-brand">
+      <div class="login-brand-icon">
+        <i class="pi pi-shield" aria-hidden="true"></i>
+      </div>
+      <h1 class="login-title">Bienvenido</h1>
+    </header>
+
+    <p-card styleClass="login-card" [header]="cardHeader()" [subheader]="cardSubheader()">
+      @if (errorMessage) {
+        <p-message severity="error" [closable]="true" (onClose)="errorMessage = null" styleClass="login-alert">
+          {{ errorMessage }}
+        </p-message>
+      }
+
+      <form class="login-form" (ngSubmit)="submit()" autocomplete="on">
+        <p-fluid>
+          <div class="field">
+            <label for="inicio-login-email" class="field-label">Correo</label>
+            <input
+              id="inicio-login-email"
+              type="email"
+              name="email"
+              pInputText
+              fluid
+              [(ngModel)]="email"
+              placeholder="tu@correo.com"
+              autocomplete="username"
+              [disabled]="loading"
+            />
+          </div>
+
+          <div class="field">
+            <label for="inicio-login-password" class="field-label">Contraseña</label>
+            <p-password
+              inputId="inicio-login-password"
+              name="password"
+              [(ngModel)]="password"
+              [feedback]="registerMode"
+              [toggleMask]="true"
+              placeholder="••••••••"
+              [attr.autocomplete]="registerMode ? 'new-password' : 'current-password'"
+              [disabled]="loading"
+              styleClass="login-password"
+              [inputStyleClass]="'w-full'"
+            />
+          </div>
+        </p-fluid>
+
+        <div class="login-actions">
+          <p-button
+            type="submit"
+            [label]="registerMode ? 'Crear cuenta' : 'Entrar'"
+            [icon]="registerMode ? 'pi pi-user-plus' : 'pi pi-sign-in'"
+            [loading]="loading"
+            [disabled]="loading"
+            styleClass="w-full"
+            fluid
+          />
+        </div>
+
+        <div class="login-alt">
+          @if (!registerMode) {
+            <p-button
+              type="button"
+              label="Registrarse"
+              icon="pi pi-user-plus"
+              severity="secondary"
+              outlined
+              fluid
+              [disabled]="loading"
+              (onClick)="showRegister()"
+            />
+          } @else {
+            <p-button
+              type="button"
+              label="Ya tengo cuenta — iniciar sesión"
+              icon="pi pi-arrow-left"
+              severity="secondary"
+              text
+              fluid
+              [disabled]="loading"
+              (onClick)="showLogin()"
+            />
+          }
+        </div>
+      </form>
+    </p-card>
+
+  </div>
+</div>

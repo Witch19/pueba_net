@@ -61,8 +61,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 });
 builder.Services.AddAuthorization(options =>
 {
+    // Tras validar el JWT, el tipo del claim de rol puede quedar como "role" o mapearse a ClaimTypes.Role (URI larga). Aceptamos ambos.
     options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole("Admin"));
+        policy.RequireAssertion(ctx =>
+            ctx.User.Claims.Any(c =>
+                (c.Type == "role" || c.Type == ClaimTypes.Role)
+                && string.Equals(c.Value, "Admin", StringComparison.Ordinal))));
 });
 
 var app = builder.Build();
