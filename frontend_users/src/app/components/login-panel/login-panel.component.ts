@@ -29,7 +29,7 @@ function readAuthError(err: HttpErrorResponse, mode: 'login' | 'register'): stri
     return 'Correo o contraseña incorrectos.';
   }
   if (err.status === 0) {
-    return 'No se pudo contactar al servidor. Revisa la URL del API y CORS.';
+    return 'No se pudo contactar al servidor. ';
   }
   return mode === 'register'
     ? 'No se pudo crear la cuenta. Intenta de nuevo.'

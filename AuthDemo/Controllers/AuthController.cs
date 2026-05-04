@@ -200,7 +200,7 @@ namespace AuthDemo.Controllers
         }
 
         /// <summary>
-        /// Acepta hash BCrypt o contraseña en texto plano legada; si cuadra la legada, reemplaza por hash.
+        /// Acepta hash BCrypt
         /// </summary>
         private bool TryVerifyAndUpgradePassword(User user, string plainPassword)
         {
@@ -211,7 +211,6 @@ namespace AuthDemo.Controllers
             }
             catch (BCrypt.Net.SaltParseException)
             {
-                // Valor en BD no es un hash BCrypt válido (p. ej. texto plano antiguo).
             }
 
             if (user.Password != plainPassword)
