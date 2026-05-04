@@ -4,7 +4,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { Divider } from 'primeng/divider';
 import { Fluid } from 'primeng/fluid';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
@@ -40,7 +39,7 @@ function readAuthError(err: HttpErrorResponse, mode: 'login' | 'register'): stri
 @Component({
   selector: 'app-login-panel',
   standalone: true,
-  imports: [FormsModule, Button, Card, Divider, Fluid, InputText, Message, Password],
+  imports: [FormsModule, Button, Card, Fluid, InputText, Message, Password],
   templateUrl: './login-panel.component.html',
   styleUrl: './login-panel.component.css'
 })
@@ -57,11 +56,6 @@ export class LoginPanelComponent {
 
   readonly cardHeader = (): string =>
     this.registerMode ? 'Crear cuenta' : 'Iniciar sesión';
-
-  readonly cardSubheader = (): string =>
-    this.registerMode
-      ? 'Registro en el API (rol User por defecto)'
-      : 'Usa tu cuenta registrada en el API';
 
   showRegister(): void {
     this.registerMode = true;

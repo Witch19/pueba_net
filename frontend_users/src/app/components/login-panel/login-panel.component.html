@@ -9,7 +9,11 @@
       <h1 class="login-title">Bienvenido</h1>
     </header>
 
-    <p-card styleClass="login-card" [header]="cardHeader()" [subheader]="cardSubheader()">
+    <p-card
+      styleClass="login-card"
+      [header]="cardHeader()"
+      [subheader]="registerMode ? 'Crea una nueva cuenta' : 'Usa tu cuenta registrada en el API'"
+    >
       @if (errorMessage) {
         <p-message severity="error" [closable]="true" (onClose)="errorMessage = null" styleClass="login-alert">
           {{ errorMessage }}
